@@ -1,0 +1,167 @@
+<template>
+  <div class="xone-input-wrapper">
+    <input 
+      type="text"
+      autocomplete="off"
+      spellcheck="false"
+      class="xone-input-number"
+      @input="change"
+      :value="formatterValue"
+      :disabled="disabled">
+  </div>
+</template>
+
+<script>
+
+  export default {
+    name: 'XoneInputNumber',
+    data() {
+      return {
+        currentValue: this.value
+      }
+    },
+    props: {
+      value: {
+        type: Number,
+        default: 1
+      },
+      max: {
+        type: Number,
+        default: Infinity
+      },
+      min: {
+        type: Number,
+        default: -Infinity
+      },
+      precision: {
+        type: Number,
+      },
+      disabled: {
+        type: Boolean,
+        default: false
+      }
+    },
+    watch: {
+      value (val) {
+         this.currentValue = val;
+      },
+      currentValue (val) {
+         this.changeVal(val);
+      },
+      min () {
+         this.changeVal(this.currentValue);
+      },
+      max () {
+         this.changeVal(this.currentValue);
+      }
+    },
+    
+    computed: {
+       precisionValue () {
+        let arr = (this.currentValue + '').split('.')
+        if (this.precision === 0 && arr[1]) 
+          return this.currentValue.toFixed(this.precision)
+        if (this.precision && arr[1] && this.precision < arr[1].length)
+          return this.currentValue.toFixed(this.precision)
+        return this.currentValue;
+      },
+      formatterValue () {
+        if (this.formatter && this.precisionValue !== null) {
+            return this.formatter(this.precisionValue);
+        } else {
+            return this.precisionValue;
+        }
+      }
+    },
+    methods: {
+      setValue (val) {
+        const {min, max} = this;
+        if (val!==null) {
+          if (val > max) {
+            val = max;
+          } else if (val < min) {
+            val = min;
+          }
+        }
+        
+        this.$nextTick(() => {
+          this.currentValue = val;
+          this.$emit('input', val);
+          this.$emit('on-change', val);
+        });
+      },
+      change(ev) {
+        let val = ev.target.value.trim()
+        const isEmptyString = val.length === 0;
+        if(isEmptyString){
+            this.setValue(null);
+            return;
+        }
+        if (event.type == 'input' && val.match(/^\-?\.?$|\.$/)) return;
+
+        val = Number(val);
+
+        if (!isNaN(val)) {
+          this.currentValue = val;
+          this.setValue(val);
+        } else {
+          event.target.value = this.currentValue;
+        }
+      },
+      changeVal (val) {
+        val = Number(val);
+      }
+    },
+    mounted() {
+      // console.log(this.precision)
+    }
+  }
+</script>
+
+<style lang="less">
+.xone-input-wrapper{
+  height: 32px;
+  font-size: 12px;
+  color: #515a6e;
+  cursor: text;
+  display: inline-block;
+  width: 100%;
+  line-height: 1.5;
+  padding: 4px 7px;
+  font-size: 12px;
+  color: #515a6e;
+  background-color: #fff;
+  background-image: none;
+  position: relative;
+  cursor: text;
+  transition: border 0.2s ease-in-out, background 0.2s ease-in-out, box-shadow 0.2s ease-in-out, -webkit-box-shadow 0.2s ease-in-out;
+  margin: 0;
+  padding: 0;
+  height: 32px;
+  line-height: 32px;
+  vertical-align: middle;
+  border: 1px solid #dcdee2;
+  border-radius: 4px;
+  overflow: hidden;
+  .xone-input-number{
+    width: 100%;
+    height: 32px;
+    line-height: 32px;
+    padding: 0 7px;
+    text-align: left;
+    outline: 0;
+    -moz-appearance: textfield;
+    color: #666;
+    border: 0;
+    border-radius: 4px;
+    -webkit-transition: all 0.2s linear;
+    transition: all 0.2s linear;
+    &:disabled{
+      color: #ccc;
+      opacity: 0.72;
+      cursor: not-allowed;
+      background-color: #f3f3f3;
+    }
+  }
+}
+</style>
