@@ -4,7 +4,7 @@
       <img :src="logoBackground">
     </div>
     <div class="login-container">
-      <h1>GrandGold管理平台</h1>
+      <h1>GrandGold官网</h1>
       <form autocomplete="off">
         <label>
           用户名称
