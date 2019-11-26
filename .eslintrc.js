@@ -1,5 +1,5 @@
 // eslint 自定义配置
-// @Last Modified by: tang biao
+// @Last Modified by: LeeMiu
 // @Ps: 温馨提示，执行eslint 文件名 --fix 可以批量修复eslint报错
 module.exports = {
   root: false,

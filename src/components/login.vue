@@ -3,11 +3,48 @@
     <div class="login-bg">
       <img :src="logoBackground">
     </div>
+    <div class="topmenus">
+      <Menu mode="horizontal" class="menubackground" active-name="1">
+        <MenuItem name="1">
+            <Icon type="ios-home" />
+            {{$t('HomePage')}}
+        </MenuItem>
+        <MenuItem name="2">
+            <Icon type="logo-freebsd-devil" />
+            {{$t('Product')}}
+        </MenuItem>
+        <Submenu name="3">
+            <template slot="title">
+                <Icon type="md-contacts" />
+                {{$t('AboutUs')}}
+            </template>
+            <MenuGroup title="使用">
+                <MenuItem name="3-1">新增和启动</MenuItem>
+                <MenuItem name="3-2">活跃分析</MenuItem>
+                <MenuItem name="3-3">时段分析</MenuItem>
+            </MenuGroup>
+            <MenuGroup title="留存">
+                <MenuItem name="3-4">用户留存</MenuItem>
+                <MenuItem name="3-5">流失用户</MenuItem>
+            </MenuGroup>
+        </Submenu>
+        <MenuItem name="4">
+            <Icon type="ios-contact" />
+            {{$t('Connect')}}
+        </MenuItem>
+      </Menu>
+      <Select v-model="locale" @on-change="changeLangFn" class="language-change" placeholder="切换语言">
+        <Option
+          v-for="(item, index) in changeLang"
+          :value="item.value"
+          :key="index">{{item.label}}</Option>
+      </Select>
+    </div>
     <div class="login-container">
-      <h1>GrandGold官网</h1>
+      <h1>{{$t('CompanyName')}}</h1>
       <form autocomplete="off">
         <label>
-          用户名称
+          {{$t('UserName')}}
         </label>
         <input
           type="text"
@@ -16,7 +53,7 @@
           v-model="loginName"
           placeholder="请输入用户名">
         <label>
-          输入密码
+          {{$t('Password')}}
         </label>
         <input
           type="password"
@@ -30,7 +67,7 @@
           class="sign"
           :disabled="isActive"
           @click="loginSubmit()">
-          登录
+          {{$t("Login")}}
         </button>
       </form>
     </div>
@@ -48,12 +85,41 @@ export default {
       logoBackground,
       loginName: '',
       passWord: '',
+      locale: [],
+      changeLang: [
+        {
+          value: "zh",
+          label: "简体中文"
+        },
+        {
+          value: "en",
+          label: "English"
+        },
+        {
+          value: "tc",
+          label: "繁體中文"
+        }
+      ],
     };
   },
-  mixins: [crypto],
+  mounted() {
+    // this.$i18n.locale 要传key
+    this.locale = this.$i18n.locale;
+    this.changeLangFn(this.locale);
+  },
   computed: {
   },
   methods: {
+    //   切换多语言
+    changeLangFn(val) {
+      let chan = this.changeLang;
+      for (let i in chan) {
+        if (chan[i].value === val) {
+          this.locale = this.$i18n.locale = chan[i].value;
+          localStorage.setItem("language", chan[i].value);
+        }
+      }
+    },
     keySubmit($event) {
       if ($event.keyCode === 13) {
         this.loginSubmit();
@@ -81,7 +147,22 @@ export default {
     height: 100%;
   }
 }
-
+.menubackground{
+  background: #182b3a;
+}
+.topmenus{
+  z-index: 5;
+  width: 100%;
+  position: absolute;
+}
+.language-change{
+  z-index: 999;
+  width: 100px;
+  right: 10px;
+  position: absolute;
+  top: 10px;
+  background-color: #182b3a;
+}
 .login-container {
   position: absolute;
   width: 400px;
