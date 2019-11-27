@@ -1,76 +1,34 @@
 <template>
-  <div>
-    <div class="login-bg">
-      <img :src="logoBackground">
-    </div>
-    <div class="topmenus">
-      <Menu mode="horizontal" class="menubackground" active-name="1">
-        <MenuItem name="1">
-            <Icon type="ios-home" />
-            {{$t('HomePage')}}
-        </MenuItem>
-        <MenuItem name="2">
-            <Icon type="logo-freebsd-devil" />
-            {{$t('Product')}}
-        </MenuItem>
-        <Submenu name="3">
-            <template slot="title">
-                <Icon type="md-contacts" />
-                {{$t('AboutUs')}}
-            </template>
-            <MenuGroup title="使用">
-                <MenuItem name="3-1">新增和启动</MenuItem>
-                <MenuItem name="3-2">活跃分析</MenuItem>
-                <MenuItem name="3-3">时段分析</MenuItem>
-            </MenuGroup>
-            <MenuGroup title="留存">
-                <MenuItem name="3-4">用户留存</MenuItem>
-                <MenuItem name="3-5">流失用户</MenuItem>
-            </MenuGroup>
-        </Submenu>
-        <MenuItem name="4">
-            <Icon type="ios-contact" />
-            {{$t('Connect')}}
-        </MenuItem>
-      </Menu>
-      <Select v-model="locale" @on-change="changeLangFn" class="language-change" placeholder="切换语言">
-        <Option
-          v-for="(item, index) in changeLang"
-          :value="item.value"
-          :key="index">{{item.label}}</Option>
-      </Select>
-    </div>
-    <div class="login-container">
-      <h1>{{$t('CompanyName')}}</h1>
-      <form autocomplete="off">
-        <label>
-          {{$t('UserName')}}
-        </label>
-        <input
-          type="text"
-          name="username"
-          class="login-input username"
-          v-model="loginName"
-          placeholder="请输入用户名">
-        <label>
-          {{$t('Password')}}
-        </label>
-        <input
-          type="password"
-          name="password"
-          class="login-input password"
-          v-model="passWord"
-          @keyup="keySubmit($event)"
-          placeholder="请输入密码">
-        <button
-          type="button"
-          class="sign"
-          :disabled="isActive"
-          @click="loginSubmit()">
-          {{$t("Login")}}
-        </button>
-      </form>
-    </div>
+  <div class="login-container">
+    <h1>{{$t('CompanyName')}}</h1>
+    <form autocomplete="off">
+      <label>
+        {{$t('UserName')}}
+      </label>
+      <input
+        type="text"
+        name="username"
+        class="login-input username"
+        v-model="loginName"
+        placeholder="请输入用户名">
+      <label>
+        {{$t('Password')}}
+      </label>
+      <input
+        type="password"
+        name="password"
+        class="login-input password"
+        v-model="passWord"
+        @keyup="keySubmit($event)"
+        placeholder="请输入密码">
+      <button
+        type="button"
+        class="sign"
+        :disabled="isActive"
+        @click="loginSubmit()">
+        {{$t("Login")}}
+      </button>
+    </form>
   </div>
 </template>
 <script>
@@ -85,41 +43,13 @@ export default {
       logoBackground,
       loginName: '',
       passWord: '',
-      locale: [],
-      changeLang: [
-        {
-          value: "zh",
-          label: "简体中文"
-        },
-        {
-          value: "en",
-          label: "English"
-        },
-        {
-          value: "tc",
-          label: "繁體中文"
-        }
-      ],
     };
   },
   mounted() {
-    // this.$i18n.locale 要传key
-    this.locale = this.$i18n.locale;
-    this.changeLangFn(this.locale);
   },
   computed: {
   },
   methods: {
-    //   切换多语言
-    changeLangFn(val) {
-      let chan = this.changeLang;
-      for (let i in chan) {
-        if (chan[i].value === val) {
-          this.locale = this.$i18n.locale = chan[i].value;
-          localStorage.setItem("language", chan[i].value);
-        }
-      }
-    },
     keySubmit($event) {
       if ($event.keyCode === 13) {
         this.loginSubmit();
@@ -171,7 +101,7 @@ export default {
   top: 18%;
   right: 10%;
   overflow: hidden;
-  z-index: 5;
+  z-index: 1;
   border-radius: 3px;
   & > h1 {
     width: 100%;

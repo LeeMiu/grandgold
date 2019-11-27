@@ -5,20 +5,16 @@
  */
 
 /* 公共模块 */
+const Main = () => import('@/components/main.vue'); // 主页
 const Login = () => import('@/components/login.vue'); // 登陆
-const Main = () => import('@/components/main.vue'); // 中间页
-const Home = () => import('@/components/home.vue'); // 主页
+const Home = () => import('@/components/home.vue'); // home页
 
 
 
 const RouterMap = [
   {
     path: '/',
-    component: Login,
-  },
-  {
-    path: '/login',
-    component: Login,
+    component: Main,
   },
   {
     path: '/main',
@@ -28,9 +24,20 @@ const RouterMap = [
     path: '/home',
     component: Main,
     label: '首页',
+    redirect: '/home/page',
     children: [{
-      path: '',
+      path: 'page',
       component: Home,
+    }],
+  },
+  {
+    path: '/login',
+    component: Main,
+    label: '产品',
+    redirect: '/login/page',
+    children: [{
+      path: 'page',
+      component: Login,
     }],
   },
 ];

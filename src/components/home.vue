@@ -8,7 +8,7 @@
 </template>
 
 <script>
-import homeBackground from '@/assets/login-bg.jpg';
+import homeBackground from '@/assets/img/HMI.png';
 export default {
   name: 'Home',
   data() {
@@ -36,12 +36,9 @@ export default {
 </script>
 <style lang="less" scoped>
 .home{
-  position: relative;
+  position: absolute;
+  z-index: 1;
   .home-bg {
-    position: absolute;
-    width: 100%;
-    height: 100%;
-    z-index: 1;
     img {
       width: 100%;
       height: 100%;
