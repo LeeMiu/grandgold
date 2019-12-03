@@ -24,6 +24,8 @@ import {
   CheckboxGroup,
   Checkbox,
   Input,
+  Carousel,
+  CarouselItem,
   Select,
   Table,
   Tabs,
@@ -56,6 +58,8 @@ Vue.component('Modal', Modal);
 Vue.component('Content', Content);
 Vue.component('Form', Form);
 Vue.component('FormItem', FormItem);
+Vue.component('Carousel', Carousel);
+Vue.component('CarouselItem', CarouselItem);
 Vue.component('Layout', Layout);
 Vue.component('Sider', Sider);
 Vue.component('Breadcrumb', Breadcrumb);

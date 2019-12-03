@@ -1,48 +1,46 @@
 <template>
-  <div class="login-container">
-    <h1>{{$t('CompanyName')}}</h1>
-    <form autocomplete="off">
-      <label>
-        {{$t('UserName')}}
-      </label>
-      <input
-        type="text"
-        name="username"
-        class="login-input username"
-        v-model="loginName"
-        placeholder="请输入用户名">
-      <label>
-        {{$t('Password')}}
-      </label>
-      <input
-        type="password"
-        name="password"
-        class="login-input password"
-        v-model="passWord"
-        @keyup="keySubmit($event)"
-        placeholder="请输入密码">
-      <button
-        type="button"
-        class="sign"
-        :disabled="isActive"
-        @click="loginSubmit()">
-        {{$t("Login")}}
-      </button>
-    </form>
+  <div class="homePage">
+    <div class="actionPlay">
+      <Carousel autoplay  loop>
+        <CarouselItem>
+            <div class="img-play">
+              <img :src="PLC">
+            </div>
+        </CarouselItem>
+        <CarouselItem>
+            <div class="img-play">
+              <img :src="UML">
+            </div>
+        </CarouselItem>
+        <CarouselItem>
+            <div class="img-play">
+              <img :src="HMI">
+            </div>
+        </CarouselItem>
+        <CarouselItem>
+            <div class="img-play">
+              <img :src="FBox">
+            </div>
+        </CarouselItem>
+      </Carousel>
+    </div>
   </div>
 </template>
 <script>
 // import Cookies from 'js-cookie';
 // import axios from 'axios';
-import logoBackground from '@/assets/login-bg.jpg';
+import PLC from '@/assets/img/PLC.png';
+import UML from '@/assets/img/UML.png';
+import HMI from '@/assets/img/HMI.png';
+import FBox from '@/assets/img/FBox.png';
 
 export default {
   data() {
     return {
-      isActive: false,
-      logoBackground,
-      loginName: '',
-      passWord: '',
+      PLC,
+      UML,
+      HMI,
+      FBox,
     };
   },
   mounted() {
@@ -67,14 +65,18 @@ export default {
 
 </script>
 <style lang="less" scoped>
-.login-bg {
+.homePage {
   position: absolute;
   width: 100%;
   height: 100%;
   z-index: 1;
-  img {
-    width: 100%;
-    height: 100%;
+  .img-play {
+    padding: 2% 25%;
+    height: 350px;
+    img {
+      width: 100%;
+      height: 100%;
+    }
   }
 }
 .menubackground{
