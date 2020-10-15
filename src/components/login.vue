@@ -1,26 +1,28 @@
 <template>
   <div class="homePage">
     <div class="actionPlay">
-      <Carousel autoplay  loop>
+      <Carousel
+        autoplay
+        loop>
         <CarouselItem>
-            <div class="img-play">
-              <img :src="PLC">
-            </div>
+          <div class="img-play">
+            <img :src="PLC">
+          </div>
         </CarouselItem>
         <CarouselItem>
-            <div class="img-play">
-              <img :src="UML">
-            </div>
+          <div class="img-play">
+            <img :src="UML">
+          </div>
         </CarouselItem>
         <CarouselItem>
-            <div class="img-play">
-              <img :src="HMI">
-            </div>
+          <div class="img-play">
+            <img :src="HMI">
+          </div>
         </CarouselItem>
         <CarouselItem>
-            <div class="img-play">
-              <img :src="FBox">
-            </div>
+          <div class="img-play">
+            <img :src="FBox">
+          </div>
         </CarouselItem>
       </Carousel>
     </div>

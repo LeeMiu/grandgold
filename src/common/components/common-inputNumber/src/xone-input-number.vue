@@ -17,7 +17,7 @@
 <script>
 
 export default {
-  name: 'eluxeInputNumber',
+  name: 'EluxeInputNumber',
   data () {
     return {
       currentValue: this.value
@@ -121,9 +121,7 @@ export default {
     setValue (val) {
       const { min, max } = this;
 
-      if (/\.\d{0,}0{1,}$/ig.test(val)) {
-
-      } else {
+      if (!(/\.\d{0,}0{1,}$/ig.test(val))) {
         val = Number(val);
         if (val !== null) {
           if (val > max) {

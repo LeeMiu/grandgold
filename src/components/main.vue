@@ -4,44 +4,71 @@
       <img :src="logoBackground">
     </div>
     <div class="topmenus">
-      <Menu mode="horizontal" class="menubackground" active-name="1">
-        <MenuItem name="/login" to="/login">
-            <Icon type="ios-home" />
-            {{$t('HomePage')}}
+      <Menu
+        mode="horizontal"
+        class="menubackground"
+        active-name="1">
+        <MenuItem
+          name="/login"
+          to="/login">
+          <Icon type="ios-home" />
+          {{ $t('HomePage') }}
         </MenuItem>
-        <MenuItem name="/main" to="/main">
-            <Icon type="logo-freebsd-devil" />
-            {{$t('Product')}}
+        <MenuItem
+          name="/main"
+          to="/main">
+          <Icon type="logo-freebsd-devil" />
+          {{ $t('Product') }}
         </MenuItem>
-        <Submenu name="/login" @on-open-change="jumpTo">
-            <template slot="title">
-                <Icon type="md-contacts" />
-                {{$t('AboutUs')}}
-            </template>
-            <MenuGroup title="使用">
-                <MenuItem name="3-1">新增和启动</MenuItem>
-                <MenuItem name="3-2">活跃分析</MenuItem>
-                <MenuItem name="3-3">时段分析</MenuItem>
-            </MenuGroup>
-            <MenuGroup title="留存">
-                <MenuItem name="3-4">用户留存</MenuItem>
-                <MenuItem name="3-5">流失用户</MenuItem>
-            </MenuGroup>
+        <Submenu
+          name="/login"
+          @on-open-change="jumpTo">
+          <template slot="title">
+            <Icon type="md-contacts" />
+            {{ $t('AboutUs') }}
+          </template>
+          <MenuGroup title="使用">
+            <MenuItem name="3-1">
+              新增和启动
+            </MenuItem>
+            <MenuItem name="3-2">
+              活跃分析
+            </MenuItem>
+            <MenuItem name="3-3">
+              时段分析
+            </MenuItem>
+          </MenuGroup>
+          <MenuGroup title="留存">
+            <MenuItem name="3-4">
+              用户留存
+            </MenuItem>
+            <MenuItem name="3-5">
+              流失用户
+            </MenuItem>
+          </MenuGroup>
         </Submenu>
-        <MenuItem name="/home" to="/home">
-            <Icon type="ios-contact" />
-            {{$t('Connect')}}
+        <MenuItem
+          name="/home"
+          to="/home">
+          <Icon type="ios-contact" />
+          {{ $t('Connect') }}
         </MenuItem>
       </Menu>
-      <Select v-model="locale" @on-change="changeLangFn" class="language-change" placeholder="切换语言">
+      <Select
+        v-model="locale"
+        @on-change="changeLangFn"
+        class="language-change"
+        placeholder="切换语言">
         <Option
           v-for="(item, index) in changeLang"
           :value="item.value"
-          :key="index">{{item.label}}</Option>
+          :key="index">
+          {{ item.label }}
+        </Option>
       </Select>
     </div>
     <Content class="content">
-        <router-view />
+      <router-view />
     </Content>
   </div>
 </template>
