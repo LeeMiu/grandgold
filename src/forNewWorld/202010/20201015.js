@@ -146,3 +146,69 @@ function maxChildStr(str) {
     }
     return res;
 }
+
+/* 防抖节流*/
+// 防抖,在事件被触发n秒后再执行回调，如在该时间内再次触发，则重新计时。用于提交按钮防快速点击、
+// 输入搜索框只发输入的最后一次
+function debounce(fn, wait) {
+    let time = null;
+    return function () {
+        const context = this;
+        const args = arguments;
+        clearTimeout(time);
+        time = setTimeout(() => {
+            fn.apply(context, args);
+        }, wait);
+    }   
+}
+// 立即执行版本，即立刻执行，此时内的多次触发都无效，需等到n秒后再触发执行
+function debounceRightNow (fn, wait, immmediate) {
+    let time = null;
+    return function () {
+        const context = this;
+        const args = arguments;
+        if (time) clearTimeout(time);
+        if (immmediate) {
+            const callNow = !time;
+            time = setTimeout(() => {
+                time = null;
+            }, wait);
+            if (callNow) fn.apply(context, args);
+        } else {
+            time = setTimeout(() => {
+                fn.apply(context, args);
+            }, wait);
+        }
+    }
+}
+
+// 节流：规定时间内多次触发只有一次有效
+function throttle(fn, wait) {
+    let perv = new Date();
+    return function () {
+        const context = this;
+        const args = arguments;
+        const now = new Date();
+        if (now - perv > wait){
+            fn.apply(context, args);
+            perv = now;
+        }
+    }
+}
+
+// 利用定时器，一定时间内如果定时器存在就不执行，直到定时器执行后清空定时器，设置下一次触发
+function throttle(fn, wait) {
+    let time = null;
+    return function() {
+        const context = this;
+        const args = arguments;
+        if (!time) {
+            time = setTimeout(() => {
+                time = null;
+                fn.apply(context, args);
+            }, wait);
+        }
+    }
+}
+
+
