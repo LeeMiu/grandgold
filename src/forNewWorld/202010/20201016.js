@@ -10,7 +10,7 @@ function depart(list, discount = 3) {
     }
     if (list.length === discount) return list;
     const avg = list.reduce((a, b) => a + b) / discount;
-    const result = Array.(discount).fill([]);
+    const result = Array(discount).fill([]);
     function getChildArr(list) {
       let length = list.length;
       let tempTotal = list[length - 1], firstArr = [list[length - 1]];
@@ -220,5 +220,8 @@ dom树没有定义的虚拟元素
 伪类和伪元素的区别：
 表示上伪类和伪元素分别用单冒号和双冒号表示
 关键在于是否需要添加伪元素才能达到效果，如果是伪元素，否则为伪类
+less和sass最主要的区别是less是通过Javascript编译，而sass是通过ruby编译的，如果没有引入前端工程化，
+less会消耗客户端性能，sass会消耗服务端性能，但是引入前端工程化的话，gunt，gulp，webpack等，
+less和sass在打包阶段都会转化成css，所以不会有区别，只是sass是基于ruby，所以每次npm的时候相对慢一点点
 
 */ 

@@ -40,7 +40,7 @@
  * 常见a、存储型：如论坛发帖，将恶意代码提交到数据库，浏览器在收到恶意代码后会执行代码
  * b、反射型：如网站搜索、跳转；将恶意代码放在url中，浏览器读取url时会执行恶意代码泄露信息 c、dom型：通过修改页面dom节点形成的
  * d、xss payload指完成各种攻击的恶意脚本：cookie劫持。
- * 预防：a、防范cookie劫持可以在set-cookie时植入httpOnly标识；将cookie和客户端ip绑定 b、输入检查，限制不饿能输入特殊字符 c、
+ * 预防：a、防范cookie劫持可以在set-cookie时植入httpOnly标识；将cookie和客户端ip绑定 b、输入检查，限制不能输入特殊字符 c、
  * 输出检查，在变量输出到html页面时，可以编码或者转义，使用\对特殊字符进行转义。
  * 2、CERF：跨站点请求伪造（cross site request forgery）
  * 即诱导进入第三方网站，在第三方网站中向被攻击网站发送跨站请求，利用被攻击网站以获取的注册凭证，冒充用户进行网站操作
@@ -55,6 +55,8 @@
  * 嵌套在指定来源的iframe中；DENY当前页面不能被嵌套在iframe中
  * 
  */
+
+const { resolve, reject } = require("core-js/fn/promise");
 
  /**
   * Koa2和Express区别：
@@ -73,3 +75,46 @@
   * 间件的第一个参数）；同时context上挂载了request和response两个对象
   * 
   */
+
+  /**
+   * 跨域
+   * 同源策略：协议+域名+端口都相同表示同源，策略限制内容有：cookies、localStorage、indeedDB等存储性内容；DOM节点、Ajax请求发送
+   * 允许跨域加载资源的标签：<img src='xxx'/>、<link href='xxx' />、<script sre='xxx' />
+   * JSONP：利用 <script> 标签没有跨域限制的漏洞，网页可以得到从其他来源动态产生的 JSON 数据。JSONP请求一定需要对方的服务器做支持才可以。
+   * JSONP和AJAX相同，都是客户端向服务器端发送请求，从服务器端获取数据的方式。但AJAX属于同源策略，JSONP属于非同源策略（跨域请求）。
+   * JSONP优点是简单兼容性好，可用于解决主流浏览器的跨域数据访问的问题。缺点是仅支持get方法具有局限性,不安全可能会遭受XSS攻击。
+   * corss: 需要浏览器和后端同时支持。IE 8 和 9 需要通过 XDomainRequest 来实现。
+   * 浏览器会自动进行 CORS 通信，实现 CORS 通信的关键是后端。只要后端实现了 CORS，就实现了跨域。
+   * 服务端设置 Access-Control-Allow-Origin 就可以开启 CORS。 该属性表示哪些域名可以访问资源，如果设置通配符则表示所有网站都可以访问资源。
+   * 虽然设置 CORS 和前端没什么关系，但是通过这种方式解决跨域问题的话，会在发送请求时出现两种情况，分别为简单请求和复杂请求。
+   * 简单请求：使用下列方之一：get、post、head且content-type的值仅限于下列之一：text/plain、multipart/form-data、application/x-www-form-urlencoded
+   * 复杂请求：不符合简单请求的请求，在请求前会增加一次options预请求，依次来知道服务器是否支持跨域
+   */
+//   手撕封装JSONP
+function myJsonp ({url, params, cb}) {
+   return new Promise((resolve, reject) => {
+      let script = document.createElement('script');
+      window[cb] = function (data) {
+         resolve(data);
+         document.body.removeChild(script);
+      }
+      let params = { ...params, cb }, arrs = [];
+      for (let key in params) {
+         arrs.push(`${key}=${params[key]}`);
+      }
+      script.src = `${url}?${arrs.join('&')}`;
+      document.body.appendChild(script);
+   })
+}
+
+// jQuery的JSONP形式
+$.ajax({
+   url:"http://crossdomain.com/jsonServerResponse",
+   dataType:"jsonp",
+   type:"get",//可以省略
+   jsonpCallback:"show",//->自定义传递给服务器的函数名，而不是使用jQuery自动生成的，可省略
+   jsonp:"callback",//->把传递函数名的那个形参callback，可省略
+   success:function (data){
+   console.log(data);}
+});
+   
