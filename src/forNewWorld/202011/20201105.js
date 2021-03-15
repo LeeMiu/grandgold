@@ -74,7 +74,7 @@ will-change指定的属性值为上面任意一个。(will-change的作用后面
 注意：
 display：none的界面不会被加入render tree、而visibility：hidden会，所以设置display：none用于显示与否更优
 display：none会触发reflow，而visibility：hidden会触发repaint
-有些情况下，修改元素的样式，浏览器不是立刻reflow或repaint，而是会积攒一批修改动作，异步refloe或增量异步reflow
+有些情况下，修改元素的样式，浏览器不是立刻reflow或repaint，而是会积攒一批修改动作，异步reflow或增量异步reflow
 但在有些情况下，如resize窗口，改变页面默认字体等，浏览器会立马reflow
 * 如果dom结构发生变化，重新渲染dom树，然后将主线程之外的任务全走一遍，开销大
 重绘不需要重新布局，没有影响几何属性，在计算样式后直接生成绘制列表。

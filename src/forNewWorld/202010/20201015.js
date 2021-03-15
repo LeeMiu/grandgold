@@ -30,10 +30,18 @@ function curry(fn) {
             args = [...args, ...arguments];
             return temp;
         } else {
-            let val = fn.apply(this, args);
+            let val = fn.apply(null, args);
             args = [];
             return val;
         }
+    }
+    // 字符类型
+    temp.toString = function() {
+        return fn.apply(null, args);
+    }
+    // 数值类型
+    temp.valueOf = function() {
+        return fn.apply(null, args);
     }
     return temp;
 }
@@ -210,5 +218,43 @@ function throttle(fn, wait) {
         }
     }
 }
+
+// 数组reduce 的pollyfill
+if(!Array.prototype.reduce) {
+    Object.defineProperty(Array.prototype, 'reduce', {
+        value: function (callback) {
+            if (this === null) {
+                throw new TypeError('Array.prototype.recude called on null or undefiend');
+            }
+            if (typeof callback !== 'function') {
+                throw new TypeError(callback + 'is not  a function');
+            }
+            var contObj = Object(this);
+            // 保证结果为非负整数
+            var len = contObj.length >>> 0;
+            var k = 0;
+            var value;
+            if (arguments.length > 1) {
+                value = arguments[1];
+            } else {
+                while(k < len && !(k in contObj)) {
+                    k++;
+                }
+                if (k >= len) {
+                    throw new TypeError('reduce of empty array with no initial Value');
+                }
+                value = contObj[k++];
+            }
+            while (k < len) {
+                if (k in contObj) {
+                    value = callback(value, contObj[k], k, contObj);
+                }
+                k++;
+            }
+            return value;
+        },
+    });
+}
+
 
 

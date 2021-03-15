@@ -78,7 +78,6 @@ function myInstanceOf (obj, fn) {
   */
 
   function ForFlat(arr) {
-      const that = this;
       let newArr = [];
       function cycleArr (list) {
         for (let i = 0; i < list.length; i++) {

@@ -9,7 +9,14 @@
  * 4、Orinoco：垃圾回收机制，基于世代假说：a、大部分对象在内存中存活时间很短；b、不死的对象，会活的更久
  * 新生代采用scavenge算法回收（from和to空间），老生代采用mark-sweep（标记清除）和mark-compact（标记整理）相结合策略。
  * 新生代会晋升到老生代，老生代会移到新生代，角色反转。
+ * 晋升的条件主要有两个，一个是对象是否经历过Scavenge回收，一个是To空间的内存占用比超过25%限制。
+ * Scavenge中只复制活着的对象，而Mark-Sweep只清理死亡对象。活对象在新生代中只占较小部分，死对象在老生代中只占较小部分，这是两种回收方式能高效处理的原因。
  * 
+ * Mark-Sweep最大的问题是在进行一次标记清除回收后，内存空间会出现不连续的状态。这种内存碎片会对后续的内存分配造成问题，
+ * 因为很可能出现需要分配一个大对象的情况，这时所有的碎片空间都无法完成此次分配，就会提前触发垃圾回收，而这次回收是不必要的。
+ * 解决Mark-Sweep的内存碎片问题，Mark-Compact被提出来。Mark-Compact是标记整理的意思，是在Mark-Sweep的基础上演变而来的。
+ * 它们的差别在于对象在标记为死亡后，在整理的过程中，将活着的对象往一端移动，移动完成后，直接清理掉边界外的内存。
+ * 由于标记整理算法需要移动对象，会影响效率，故只有在空间不足以对从新生代中晋升过来的对象进行分配时才使用Mark-Compact。
  */
 
  /**
@@ -18,7 +25,10 @@
  * @Params: types
  * @Return: 初始事件
   */
- class EventListener {
+ const types = ['addTabs', 'refreshData', 'refreshMenu', 'refreshTree', 'change', 'eventLocation', 'deleteTab'];
+const basicEvents = {};
+types.forEach((key) => { basicEvents[key] = []; });
+ class EventBus {
     constructor() {
         this.events = {};
     }

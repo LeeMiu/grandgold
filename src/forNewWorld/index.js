@@ -28,10 +28,18 @@ function curryFn(fn) {
             argList = [...argList, ...arguments];
             return tempFn;
         } else {
-            let val = fn.apply(this, args);
+            let val = fn.apply(this, argList);
             argList = [];
             return val;
         }
+    }
+    // 字符类型
+    tempFn.toString = function() {
+        return fn.apply(this, args);
+    }
+    // 数值类型
+    tempFn.valueOf = function() {
+        return fn.apply(this, args);
     }
     return tempFn;
 }
@@ -322,3 +330,177 @@ function myGet (obj, keys, defaultValue = undefined) {
     }
     return res;
 }
+
+  // 代码实现
+function arrayToTree(array) {
+    let root = array[0]
+    array.shift()
+    let tree = {
+        id: root.id,
+        val: root.val,
+        children: array.length > 0 ? toTree(root.id, array) : []
+    }
+    return tree;
+}
+
+function toTree(parenId, array) {
+    let children = []
+    let len = array.length
+    for (let i = 0; i < len; i++) {
+        let node = array[i]
+        if (node.parentId === parenId) {
+            children.push({
+                id: node.id,
+                val: node.val,
+                children: toTree(node.id, array)
+            })
+        }
+    }
+    return children
+}
+
+console.log(arrayToTree(input))
+
+if (!Array.prototype.reduce) {
+    Object.defineProperty(Array.prototype, "reduce", {
+      value: function (callback) {
+        if (this === null) {
+          throw new TypeError(
+            "Array.prototype.reduce called on null or undefiend"
+          );
+        }
+        if (typeof callback !== "function") {
+          throw new TypeError(callback + "is not a function");
+        }
+        var o = Object(this);
+        var len = o.length >>> 0;
+        var k = 0;
+        var value;
+        if (arguments.length >= 2) {
+          value = arguments[1];
+        } else {
+          while (k < len && !(k in o)) {
+            k++;
+          }
+          if (k >= len) {
+            throw new TypeError("Reduce of empty array with no initial value");
+          }
+          value = o[k++];
+        }
+        while (k < len) {
+          if (k in o) {
+            value = callback(value, o[k], k, o);
+          }
+          k++;
+        }
+        return value;
+      },
+    });
+  }
+
+  /**
+   * 设计模式：
+   * 原则:solid-单一职责原则/开放/封闭原则/里氏替换原则/接口隔离原则/依赖倒转原则
+   * 1、单例模式：保证一个类仅有一个实例，并提供一个访问它的全局访问点。实现的方法为先判断实例存在与否，
+   * 如果存在则直接返回，如果不存在就创建了再返回，这就确保了一个类只有一个实例对象。
+   * 使用场景：弹窗；无论点击多少次，弹窗只应该创建一次；
+   * 2、策略模式：定义一系列的算法，把他们一个个封装起来，并且使他们可以相互替换。
+   * 两部分组成：第一部分是个策略类（可变，封装了策略的具体实现）、第二个部分是环境类（不变）：接受客户的请求，委托给某个策略。
+   * 3、代理模式：为一个对象提供一个代用品或占位符，以便控制对它的访问。
+   * 常用虚拟代理形式，延迟到需要的时候再去创建
+   * 使用场景:代理实现图片懒加载
+   * 4、中介者模式：通过一个中介者对象，其他所有的相关对象都通过该中介者对象来通信，而不是相互引用，当其中的一个对象发生改变时，
+   * 只需要通知中介者对象即可。通过中介者模式可以解除对象与对象之间的紧耦合关系。
+   * 例如购物车需求，存在商品选择表单、颜色选择表单、购买数量表单等等，都会触发change事件，那么可以通过中介者来转发处理这些事件，
+   * 实现各个事件间的解耦，仅仅维护中介者对象即可。
+   * 5、装饰者模式：在不改变对象自身的基础上，在程序运行期间给对象动态地添加方法。
+   * 装饰者模式适用的场景：原有方法维持不变，在原有方法上再挂载其他方法来满足现有需求；函数的解耦，将函数拆分成多个可复用的函数，
+   * 再将拆分出来的函数挂载到某个函数上，实现相同的效果但增强了复用性。
+   * 6、观察者模式：被观察对象（subject）维护一组观察者（observer），当被观察对象状态改变时，
+   * 通过调用观察者的某个方法将这些变化通知到观察者。可以调用的api：subscribe(): 接收一个观察者observer对象，使其订阅自己
+   * unsubscribe(): 接收一个观察者observer对象，使其取消订阅自己；fire(): 触发事件，通知到所有观察者
+   */
+  // 手动实现观察者模式，类似于eventBus
+  // 被观察者
+function Subject() {
+    this.observers = [];
+  }
+  
+  Subject.prototype = {
+    // 订阅
+    subscribe: function (observer) {
+      this.observers.push(observer);
+    },
+    // 取消订阅
+    unsubscribe: function (observerToRemove) {
+      this.observers = this.observers.filter(observer => {
+        return observer !== observerToRemove;
+      })
+    },
+    // 事件触发
+    fire: function () {
+      this.observers.forEach(observer => {
+        observer.call();
+      });
+    }
+  }
+//   测试用例
+const subject = new Subject();
+
+function observer1() {
+  console.log('Observer 1 Firing!');
+}
+
+
+function observer2() {
+  console.log('Observer 2 Firing!');
+}
+
+subject.subscribe(observer1);
+subject.subscribe(observer2);
+subject.fire();
+
+//输出：
+// Observer 1 Firing! 
+// Observer 2 Firing!
+
+  //装饰者模式
+  Function.prototype.before = function(beforefn) {
+    var self = this;    //保存原函数引用
+    return function(){  //返回包含了原函数和新函数的 '代理函数'
+        beforefn.apply(this, arguments);    //执行新函数，修正this
+        return self.apply(this,arguments);  //执行原函数
+    }
+}
+Function.prototype.after = function(afterfn) {
+    var self = this;
+    return function(){
+        var ret = self.apply(this,arguments);
+        afterfn.apply(this, arguments);
+        return ret;
+    }
+}
+var func = function() {
+    console.log('2');
+}
+//func1和func3为挂载函数
+var func1 = function() {
+    console.log('1');
+}
+var func3 = function() {
+    console.log('3');
+}
+func = func.before(func1).after(func3);
+func();
+// console.log 1 2 3
+
+/**
+ * 数组、链表、指针、集合的区别
+ * 数组：线性数据结构，连续内存空间，存储相同的数据类型，支持随机访问，插入，删除需要On的时间复杂度；
+ * 适合做底层数据结构
+ * 链表：链式数据结构，非连续内存，内存可拓展，存储相同数据类型，插入删除高效，直接改变next即可，查询
+ * 需要依赖算法查询；通常会通过链表创建红黑树，平衡树、基数树等
+ * 指针：相当于一个变量，存放其他变量在内存中的地址
+ * 集合：典型如set、map、list等，特点是内存空间不连续，可扩容；数据类型未声明时为Object
+ * 
+ */

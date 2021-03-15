@@ -111,7 +111,7 @@ function myPromise(construct) {
   self.onFulfilledCallback = [];
   self.onRejectedCallback = [];
   function resolve(value) {
-    if (value instanceof Promise) {
+    if (value instanceof myPromise) {
       return value.then(resolve, reject);
     }
     if(self.status === 'pending') {
@@ -147,7 +147,7 @@ myPromise.prototype.then = function(onFulfilled, onRejected){
       onRejected(self.reason);
       break;
     case 'pending':
-      return newPromise = new Promise((resolve, reject) => {
+      return newPromise = new myPromise((resolve, reject) => {
         self.onFulfilledCallback.push((value) => {
           try{
             onFulfilled(value);
@@ -207,6 +207,13 @@ react不想事件冒泡调用event.stopPropagation是无效的，需要调用eve
 合成事件：调用EventPluginHub的extractEvent方法--循环plugins--根据各自的evntType获取不同的事件池--getPooled取出合成事件（事件池为空则创建个新的）
 --根据元素nodeid（唯一标识key）和eventType从listenerBank中取回调--返回带有合成事件参数的回调函数
 
+事件传播：捕获----目标----冒泡
+事件捕获: 在捕获阶段，从window开始，一直到触发事件的元素
+window---document---html---body---目标元素
+事件冒泡：和捕获相反，在冒泡阶段，从目标元素出发，指导window
+目标元素---body---html---document---window
+侦听事件addEventListener第四个参数表明是捕获还是冒泡
+addEventListener(el, event, cb, isCapture),isCapture为false表示冒泡、true表示捕获，默认是false
 
 伪类：pseudu-class
 比如:hover,:ActiveXObject,:visited,:AnchorLink,:first-child,:focus等

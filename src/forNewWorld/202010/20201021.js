@@ -20,18 +20,20 @@
  * 3、运行中：a、数据或文件放node服务端处理，使用stream流方式处理 b、React.Profiler和performance API分析组件渲
  * 染和时耗 c、使用componentDidCatch处理错误边界。
  * 
- * react hooks优点：让react函数组件更加灵活
+ * react hooks优点：让react函数定义组件更加灵活
  * 引入hooks前：
  * react问题：1、组件复用状态逻辑困难 2、复杂组件难以理解，高阶组件、函数组件嵌套过深 3、class组件的this指向 4、难以记忆的生命周期
  * 引入hooks后：
- * 1、useState返回状态值，以及更新该状态值函数 2、useEffect接受包含命令式 3、useContext接受上下文对象并返回当前上下文 
+ * 1、useState返回状态值，以及更新该状态值函数 
+ * 2、useEffect接受包含命令式 .useEffect(callback, [source]),如果没有传入[source]参数时,默认每次render时会优先调用上次保存的回调中返回的函数
+ * 3、useContext接受上下文对象并返回当前上下文 
  * 4、useReducer useState的替代方案。接受类型为(state，action) => newState的reducer，并返回与dispatch方法配对的当前状态。
-    5、useCallback 返回一个回忆的memoized版本，该版本仅在其中一个输入发生更改时才会更改。纯函数的输入输出确定性
-    6、useMemo 纯的一个记忆函数
-    7、useRef 返回一个可变的ref对象，其.current属性被初始化为传递的参数，返回的 ref 对象在组件的整个生命周期内保持不变。
-    8、useImperativeMethods 自定义使用ref时公开给父组件的实例值
-    9、useMutationEffect 更新兄弟组件之前，它在React执行其DOM改变的同一阶段同步触发
-    10、useLayoutEffect DOM改变后同步触发。使用它来从DOM读取布局并同步重新渲染
+ * 5、useCallback 返回一个回忆的memoized版本，该版本仅在其中一个输入发生更改时才会更改。纯函数的输入输出确定性
+ * 6、useMemo 纯的一个记忆函数
+ * 7、useRef 返回一个可变的ref对象，其.current属性被初始化为传递的参数，返回的 ref 对象在组件的整个生命周期内保持不变。
+ * 8、useImperativeMethods 自定义使用ref时公开给父组件的实例值
+ * 9、useMutationEffect 更新兄弟组件之前，它在React执行其DOM改变的同一阶段同步触发
+ * 10、useLayoutEffect DOM改变后同步触发。使用它来从DOM读取布局并同步重新渲染
  * 
  */
 /**
@@ -42,9 +44,9 @@
  * d、xss payload指完成各种攻击的恶意脚本：cookie劫持。
  * 预防：a、防范cookie劫持可以在set-cookie时植入httpOnly标识；将cookie和客户端ip绑定 b、输入检查，限制不能输入特殊字符 c、
  * 输出检查，在变量输出到html页面时，可以编码或者转义，使用\对特殊字符进行转义。
- * 2、CERF：跨站点请求伪造（cross site request forgery）
+ * 2、CSRF：跨站点请求伪造（cross site request forgery）
  * 即诱导进入第三方网站，在第三方网站中向被攻击网站发送跨站请求，利用被攻击网站以获取的注册凭证，冒充用户进行网站操作
- * 预防：a、同源检测：检测header中的origin Header b、CERF token验证：页面请求携带token，服务器验证token是否一致 c、双重cookies验证
+ * 预防：a、同源检测：检测header中的origin Header b、CERF token验证：页面请求携带csrf_token，服务器验证token是否一致 c、双重cookies验证, cookies的sameSite属性
  * 3、sql注入：把SQL命令插入到Web表单递交或输入域名或页面请求的查询字符串，最终达到欺骗数据库服务器执行恶意的SQL命令,从而达到和服务器交互。
  * 预防：a、后台进行输入验证，过滤sql敏感字符 b、使用参数化查询，避免拼接sql
  * 4、中间人攻击：（man-in-the-middle attack，MITM），指攻击者在客户端与服务端中间分别与两端建立联系并交换传输数据，在此期间，中间人
