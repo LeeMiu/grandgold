@@ -130,18 +130,18 @@ for(var i = 1;i <= 5;i++){
       setTimeout(function timer(){
         console.log(j)
       }, 0)
-    })(i)
+    })(i);
   }
   for(var i = 1; i <= 5; i ++){
       setTimeout(function timer(j){
         console.log(j)
-      }, 0, i)
+      }, 0, i);
     }
 
   for(let i = 1; i <= 5; i++){
     setTimeout(function timer(){
       console.log(i)
-    },0)
+    },0);
   }
 
 //   检测对象中是否有某个属性：关键字in、Object.hasOwnProperty

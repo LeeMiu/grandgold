@@ -6,21 +6,21 @@
  * 宏任务实现的顺序：setImmediate--MessageChannel--setTimeout
  * 
  * vue生命周期:
- * init:
- * 1、initLifecycle/Event：往vm上挂载各种属性
- * 2、beforeCreated：实例创建前的回调钩子-------钩子
+ * init:（var vm = new Vue()表示开始创建一个Vue实例对象）
+ * 1、initLifecycle/Event：往vm上挂载各种属性，初始化事件系统
+ * 2、beforeCreated：实例被创建之初，组件的属性生效之前-------钩子
  * 3、initInjection/initState：初始化注入和data的响应性
- * 4、created：创建完成钩子，此时data属性已经绑定，但还未生成真实的dom（即没有el）------钩子
+ * 4、created：创建完成钩子，此时data属性已经绑定，但还未生成真实的dom，$el还不可用（即没有el）------钩子
  * 5、元素挂载：$el存在则继续向下编译，没有则停止直到vue实例调用了vm.$mount()才继续编译
  * 6、是否有template：.vue后缀的文件vue-loader会将template编译成render function,没有template则将外部HTML作为模板编译
  * 综合排名优先级：render函数选项 > template选项 > outer HTML.
- * 7、beforeMount：模板编译/挂载之前钩子,此时还是通过{{text}}进行占位------钩子
+ * 7、beforeMount：模板编译/挂载之前钩子,相关的render函数首次被调用，此时还是通过{{text}}进行占位------钩子
  * 8、执行render function，生成真正的dom、并替换原来vitrual dom到dom tree中
- * 8、mounted：组件已经挂载钩子-----钩子
+ * 8、mounted：el被新创建的vm.$el替换，组件已经挂载钩子-----钩子
  * beforeUpdate：data数据发生变化，需要重新渲染组件，更新前的钩子-----钩子
  * updated：执行diff算法，对比改变触发ui更新----钩子
  * 1、其中flushScheduleQueue：中的watcher.before触发beforeUpdate钩子，watcher.run执行watcher中的notify，通知所有依赖更新ui
- * actived/deactived：不销毁，缓存组件的激活和失活
+ * actived/deactived：不销毁，keep-alive专属，缓存组件的激活和失活
  * destroy：
  *  1、beforeDestory：销毁开始，此时实例仍然完全可用。----钩子
  *  2、销毁自身且递归销毁子组件以及事件监听：
@@ -124,6 +124,32 @@ Vue.prototype.$destory = function() {
     watcher.run()
     updateComponent()
  */
+function defineReactive(obj, key, val) {
+    const dep = new Dep();
+    // 给当前属性的值添加监听
+    let chlidOb = observe(val);
+    Object.defineProperty(obj, key, {
+      enumerable: true,
+      configurable: true,
+      get: () => {
+        // 如果Dep类存在target属性，将其添加到dep实例的subs数组中
+        // target指向一个Watcher实例，每个Watcher都是一个订阅者
+        // Watcher实例在实例化过程中，会读取data中的某个属性，从而触发当前get方法
+        if (Dep.target) {
+          dep.depend();
+        }
+        return val;
+      },
+      set: newVal => {
+        if (val === newVal) return;
+        val = newVal;
+        // 对新值进行监听
+        chlidOb = observe(newVal);
+        // 通知所有订阅者，数值被改变了
+        dep.notify();
+      },
+    });
+  }
 
  /**
   * virtual dom原理：

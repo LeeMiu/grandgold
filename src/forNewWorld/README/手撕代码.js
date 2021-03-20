@@ -33,14 +33,23 @@ function myBind(context, ...args) {
     return fBound;
 }
 // 手写call， apply
-function myCallApply(context, ...args) {
-    let self = context || window;
+function myCallApply(context) {
+    let context = context || window;
     let fn = Symbol('fn');
-    self.fn = this;
+    context.fn = this;
+    let res;
     // call
-    let res = eval('context.fn(...args)');
+    const args = [...arguments].slice(1);
+    res = eval('context.fn(...args)');
     // apply
-    let res = eval('context.fn([...args])');
+    if (arguments[1]) {
+        const args = arguments[1];
+        res = eval('context.fn(...args)');
+    } else {
+        res = eval('context.fn()');
+    }
+
+    delete context.fn;
     return res;
 }
 // 寄生组合式继承（最完美的继承）

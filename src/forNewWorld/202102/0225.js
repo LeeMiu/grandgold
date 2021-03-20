@@ -1,7 +1,7 @@
 /**
- * css-盒模型：dom所采用的布局模型，可以通过box-size进行设置；
- * w3c标准盒模型：content-box；
- * ie标准盒模型：border-box；
+ * css-盒模型：content+padding+border+margin组成。dom所采用的布局模型，可以通过box-size进行设置；
+ * w3c标准盒模型：content-box，盒子的conten不包括padding、border；
+ * ie标准盒模型：border-box，盒子的content包括了padding、border；
  * BFC：Block Formatting Context：块级格式化上下文；使BFC内部和外部的元素相互隔离
  * ie下为Layout，通过zoom：1触发
  * 触发：根元素、position：absolute/fixed、display：inline-block/table、float元素、overflow ！== visible
