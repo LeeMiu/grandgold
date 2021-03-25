@@ -11,9 +11,9 @@ module.exports = {
     "node": true
   },
   "extends": [
-    "airbnb",
-    "eslint:recommended",
-    "plugin:react/recommended",
+    // "airbnb",
+    // "eslint:recommended",
+    // "plugin:react/recommended",
   ],
   "parserOptions": {
     "ecmaVersion": 7,
@@ -24,7 +24,7 @@ module.exports = {
     "sourceType": "module"
   },
   "plugins": [
-    "react"
+    // "react"
   ],
   "rules": {
     'no-debugger': process.env.NODE_ENV === 'production' ? 2 : 0,
